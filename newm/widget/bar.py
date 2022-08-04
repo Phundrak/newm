@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING, Any
+from typing import Optional, TYPE_CHECKING, Any
 
 from abc import abstractmethod
 from threading import Thread
@@ -28,7 +28,8 @@ conf_bottom_bar_text = configured_value('panels.bottom_bar.native.texts', lambda
 
 
 class Bar(PyWMCairoWidget, Animate[PyWMWidgetDownstreamState], Animatable):
-    def __init__(self, wm: Layout, output: PyWMOutput, height: int, font: str, font_size: int, *args: Any, **kwargs: Any):
+    def __init__(self, wm: Layout, output: PyWMOutput, height: int, font: str, font_size: int,
+                 color: Optional[tuple[float, float, float, float]], *args: Any, **kwargs: Any):
         PyWMCairoWidget.__init__(
             self, wm, output,
             int(output.scale * output.width),
@@ -41,6 +42,7 @@ class Bar(PyWMCairoWidget, Animate[PyWMWidgetDownstreamState], Animatable):
         self.texts = ["Leftp", "Middlep", "Rightp"]
         self.font_size = output.scale * font_size
         self._font = font
+        self._color = color if color != None else (.0, .0, .0, .1)
 
     def set_texts(self, texts: list[str]) -> None:
         self.texts = texts
@@ -49,7 +51,7 @@ class Bar(PyWMCairoWidget, Animate[PyWMWidgetDownstreamState], Animatable):
     def _render(self, surface: cairo.ImageSurface) -> None:
         ctx = cairo.Context(surface)
 
-        ctx.set_source_rgba(.0, .0, .0, .7)
+        ctx.set_source_rgba(*self._color)
         ctx.rectangle(0, 0, self.width, self.height)
         ctx.fill()
 
