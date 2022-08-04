@@ -51,7 +51,7 @@ class Bar(PyWMCairoWidget, Animate[PyWMWidgetDownstreamState], Animatable):
     def _render(self, surface: cairo.ImageSurface) -> None:
         ctx = cairo.Context(surface)
 
-        ctx.set_source_rgba(*self._color)
+        ctx.set_source_rgba(.0, .0, .0, .1)
         ctx.rectangle(0, 0, self.width, self.height)
         ctx.fill()
 
